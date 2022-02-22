@@ -122,7 +122,7 @@ int main() {
 	int t = 5;
 	cout << "&t=" << &t << endl;
 
-	int z = ++k; // int& operator++(int& k) { k = k + 1; return k; }
+	int z1 = ++k; // int& operator++(int& k) { k = k + 1; return k; }
 	int y = k++; // int operator++(int&k, int ignored) 
 	// { int t = k; k = k + 1; return t;  }
 

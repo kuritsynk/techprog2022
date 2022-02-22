@@ -34,6 +34,24 @@ public: // открытая область
 		setSize(size);
 	}
 
+	~Vector() {
+		setSize(0);
+	}
+
+	// Vector& Vector_operator=_Vector*_Vector&(Vector* this, const Vector& r)
+	Vector& operator=(const Vector& r) {
+		if (this == &r) {
+			// присвоение самому себе
+			return *this;
+		}
+
+		setSize(r.size);
+		for (int i = 0; i < size; ++i) {
+			data[i] = r.data[i];
+		}
+
+		return *this;
+	}
 
 	// int Vector_getSize_Vector*(Vector* this) {
 	//   return this->size;
@@ -97,10 +115,13 @@ int main() {
 	v1.setSize(5); // Vector_setSize_Vector*_int(&v1, 5);
 	v1.setSize(10); // Vector_setSize_Vector*_int(&v1, 10);
 
+	
 	Vector v2;
 	v2.setSize(10); // Vector_setSize_Vector*_int(&v2, 10);
-	v2.setSize(-10); // == v2.setSize(10) -- исключение
+	// v2.setSize(-10); // == v2.setSize(10) -- исключение
 	v2.setSize(0); // очистка выделенной динамической памяти
+
+	v2 = v2;
 
 	Vector* pv = new Vector(); 
 	// 1. Выделение памяти в куче в размере sizeof(Vector) байт 
@@ -109,10 +130,19 @@ int main() {
 	pv->print();
 
 
-	Vector v3(10); // вызывается конструктор v3.Vector(10)
-	v3.print();
+	{
+		Vector v3(10); // вызывается конструктор v3.Vector(10)
+		v3 = v2; // v3.size=v2.size; v3.data=v2.data
+		// v3.operator=(v2),  Vector_operator=_Vector*_Vector&(&v3, v2)
 
-	delete pv; // 
+		v3.print();
+	} // вызывается деструктор v3: v3.~Vector() // delete[] v3.data == delete[] v2.data
+
+	v2.print();
+
+	delete pv; 
+	// 1. Вызывается деструктор pv->~Vector()
+	// 2. Освобождается память по указателю pv
 
 	return 0;
 }
