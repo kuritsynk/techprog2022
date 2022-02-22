@@ -24,6 +24,17 @@ private: // закрытая область
 
 public: // открытая область
 
+	// Конструктор по умолчанию
+	// Список инициализации: инициализация полей в порядке их объявления
+	Vector() : data(nullptr), size(0) {
+		// здесь поля уже проинициализированы
+	}
+
+	Vector(int size) : size(0), data(nullptr) {
+		setSize(size);
+	}
+
+
 	// int Vector_getSize_Vector*(Vector* this) {
 	//   return this->size;
 	// }
@@ -35,14 +46,38 @@ public: // открытая область
 	//   this->size = size;
 	//   this->data = new int[size];
 	// }
-	void setSize(int size) {
-		this->size = size;
-		data = new int[size];
-	}
+	void setSize(int size); 
+
+	void print();
 
 private:
 
 };
+
+void Vector::setSize(int size) {
+	if (size < 0) {
+		throw new std::exception("Incorrect size");
+	}
+
+	if (data != nullptr) {
+		delete[] data;
+		data = nullptr;
+		this->size = 0;
+	}
+
+	if (size == 0) {
+		return;
+	}
+
+	this->size = size;
+	data = new int[size];
+}
+
+void Vector::print() {
+	for (int i = 0; i < size; ++i) {
+		std::cout << data[i] << std::endl;
+	}
+}
 
 int main() {
 	// один класс и две переменных с типом ClassName
@@ -64,7 +99,20 @@ int main() {
 
 	Vector v2;
 	v2.setSize(10); // Vector_setSize_Vector*_int(&v2, 10);
+	v2.setSize(-10); // == v2.setSize(10) -- исключение
+	v2.setSize(0); // очистка выделенной динамической памяти
 
+	Vector* pv = new Vector(); 
+	// 1. Выделение памяти в куче в размере sizeof(Vector) байт 
+	// 2. Вызов конструктра (в данном случае К по умолчанию) для Vector: pv->Vector()
+	pv->setSize(5);
+	pv->print();
+
+
+	Vector v3(10); // вызывается конструктор v3.Vector(10)
+	v3.print();
+
+	delete pv; // 
 
 	return 0;
 }
