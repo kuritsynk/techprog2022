@@ -1,6 +1,6 @@
-#include <iostream>
+п»ї#include <iostream>
 
-// Пространство имен
+// РџСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ РёРјРµРЅ
 
 int k = 5;
 
@@ -28,12 +28,12 @@ namespace MySpace {
 using namespace MySpace::InnerSpace;
 using namespace std;
 
-// int min_int_int - внутреннее название функции
+// int min_int_int - РІРЅСѓС‚СЂРµРЅРЅРµРµ РЅР°Р·РІР°РЅРёРµ С„СѓРЅРєС†РёРё
 int min(int a, int b) {
 	return a < b ? a : b;
 }
 
-// min_double_double - внутреннее название функции
+// min_double_double - РІРЅСѓС‚СЂРµРЅРЅРµРµ РЅР°Р·РІР°РЅРёРµ С„СѓРЅРєС†РёРё
 double min(double a, double b) {
 	return a < b ? a : b;
 }
@@ -49,20 +49,20 @@ void print(int x = 0, bool negativeInBrackets = false) {
 }
 
 int foo(int x) {
-	// int x - входной параметр - локальные переменные функции 
+	// int x - РІС…РѕРґРЅРѕР№ РїР°СЂР°РјРµС‚СЂ - Р»РѕРєР°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ С„СѓРЅРєС†РёРё 
 	x = x + 1;
 	return x;
-} // x уничтожается, т.к. время жизни закончилось
+} // x СѓРЅРёС‡С‚РѕР¶Р°РµС‚СЃСЏ, С‚.Рє. РІСЂРµРјСЏ Р¶РёР·РЅРё Р·Р°РєРѕРЅС‡РёР»РѕСЃСЊ
 
 int fooPtr(int* x) {
-	// int* x - локальная переменная
+	// int* x - Р»РѕРєР°Р»СЊРЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ
 	cout << "x=" << x << endl;
 	*x = *x + 1;  
 	return *x;
 } 
 
 int& fooRef(int& x) {
-	// int& x - локальная переменная - псевдоним для обращения через указатель
+	// int& x - Р»РѕРєР°Р»СЊРЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ - РїСЃРµРІРґРѕРЅРёРј РґР»СЏ РѕР±СЂР°С‰РµРЅРёСЏ С‡РµСЂРµР· СѓРєР°Р·Р°С‚РµР»СЊ
 	cout << "&x=" << &x << endl;
 	x = x + 1;
 	return x;
@@ -81,7 +81,7 @@ int main() {
 
 	cout << "using cout without specifing std" << endl;
 
-	// Перегрузка функций
+	// РџРµСЂРµРіСЂСѓР·РєР° С„СѓРЅРєС†РёР№
 
 	int z = min(3, 6); // z = min_int_int(3, 6)
 	cout << "z=min(3, 6)=" << z << endl; // 3
@@ -99,23 +99,23 @@ int main() {
 
 	print(); // print_int_bool(0, false)  x=0
 
-	// Передача параметров в функции
+	// РџРµСЂРµРґР°С‡Р° РїР°СЂР°РјРµС‚СЂРѕРІ РІ С„СѓРЅРєС†РёРё
 
 	int k = 2;
-	// Передача по значению
-	int l = foo(k); // l = 3 k = 2 - k не изменился, foo::x - копия k
+	// РџРµСЂРµРґР°С‡Р° РїРѕ Р·РЅР°С‡РµРЅРёСЋ
+	int l = foo(k); // l = 3 k = 2 - k РЅРµ РёР·РјРµРЅРёР»СЃСЏ, foo::x - РєРѕРїРёСЏ k
 	// int l = tmp (=return foo::x)
 
 	cout << "&k=" << &k << endl;
-	l = fooPtr(&k); // l = 3; k = 3; l = tmp (= return fooPtr::x) - копия &k
+	l = fooPtr(&k); // l = 3; k = 3; l = tmp (= return fooPtr::x) - РєРѕРїРёСЏ &k
 
-	l = fooRef(k); // l = 4; k = 4; l = k // fooRef::x - псевдоним для k
+	l = fooRef(k); // l = 4; k = 4; l = k // fooRef::x - РїСЃРµРІРґРѕРЅРёРј РґР»СЏ k
 
 	{
 		int t = 5;
 		cout << "&t=" << &t << endl;
 	}
-	// cout << t << endl; // t - не существует
+	// cout << t << endl; // t - РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
 	int s = 5;
 	cout << "&s=" << &s << endl;
 
