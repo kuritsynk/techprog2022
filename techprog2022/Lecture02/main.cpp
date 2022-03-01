@@ -55,10 +55,44 @@ public: // открытая область
 		return *this;
 	}
 
+	// Оператор умножения на число справа
+	// Vector v1(4), v2 = v1 * 5; // v2 = v1.operator*(5)
+	Vector operator*(int r) const {
+		Vector result(size);
+		for (int i = 0; i < size; ++i) {
+			result.data[i] = data[i] * r;
+		}
+		return result;
+	}
+
+	Vector& operator*=(int r) {
+		for (int i = 0; i < size; ++i) {
+			data[i] *= r; // int& <- int
+		}
+		return *this;
+	}
+
+	// Префиксная форма инкремента: ++a
+	Vector& operator++() {
+		for (int i = 0; i < size; ++i) {
+			++data[i];
+		}
+		return *this;
+	}
+
+
+
+	// Постфиксная форма инкремента: a++
+	Vector operator++(int ignored) {
+		Vector result(*this);
+		++(*this);
+		return result;
+	}
+
 	// int Vector_getSize_Vector*(Vector* this) {
 	//   return this->size;
 	// }
-	int getSize() {
+	int getSize() const {
 		return this->size;
 	}
 
@@ -68,7 +102,18 @@ public: // открытая область
 	// }
 	void setSize(int size); 
 
+	int& operator[](int index) {
+		if (index < 0 || index >= size) {
+			throw std::exception("Некорректный индекс");
+		}
+		return data[index];
+	}
+
 	void print();
+
+	friend Vector operator+(const Vector& l, const Vector& r);
+	friend int operator*(const Vector& l, const Vector& r);
+	friend bool operator==(const Vector& l, const Vector& r);
 
 private:
 
@@ -99,6 +144,53 @@ void Vector::setSize(int size) {
 	this->size = size;
 	data = new int[size];
 }
+
+// Оператор умножения на число слева - функция
+Vector operator*(int l, const Vector& r) {
+	return r * l; // r.operator*(l)
+}
+
+// Оператор сложения двух векторов - функция
+Vector operator+(const Vector& l, const Vector& r) {
+	if (l.getSize() != r.getSize()) {
+		throw new std::exception("Несовместимые размеры векторов");
+	}
+	Vector result(l.getSize());
+	for (int i = 0; i < l.getSize(); ++i) {
+		result.data[i] = l.data[i] + r.data[i];
+	}
+	return result;
+}
+
+// Скалярное произведение двух векторов - функция
+int operator*(const Vector& l, const Vector& r) {
+	if (l.size != r.size) {
+		throw new std::exception("Несовместимые размеры векторов");
+	}
+	int result = 0;
+	for (int i = 0; i < l.size; ++i) {
+		result += l.data[i] * r.data[i];
+	}
+	return result;
+}
+
+// Сравнение двух векторов
+bool operator==(const Vector& l, const Vector& r) {
+	if (l.size != r.size) {
+		return false;
+	}
+	for (int i = 0; i < l.size; ++i) {
+		if (l.data[i] != r.data[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool operator!=(const Vector& l, const Vector& r) {
+	return !(l == r);
+}
+
 
 void Vector::print() {
 	for (int i = 0; i < size; ++i) {
@@ -165,6 +257,21 @@ int main() {
 	Vector v4 = v2; // КК: v4.Vector(v2)
 	v4 = v2;        // = : v4.operator=(v2)
 
+	Vector v5 = v2 * 5; // const Vector tmp = v2.operator*(5); v5 = tmp;
+
+	Vector v6 = 5 * v2;
+
+	v6 = v4 + v2; // v6.operator=(operator+(v4, v2))
+	int mult6 = v4 * v2;
+
+	v6 *= 5; // v6 = v6 * 5; -> v6.operator*=(5) - результатом является v6
+
+	++v6; // v6.operator++(); результат - сам v6
+	Vector v7 = v6++; // v7.Vector(v6.operator++(0)); результат - новый объект
+
+	std::cout << "v7.data[5]=" << v7[5] << std::endl;
+
+	v7[5] = 7; // v7.operator[](5) = 7; v7.data[5] int& <- int
 
 	return 0;
 }
