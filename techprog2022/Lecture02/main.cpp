@@ -34,6 +34,8 @@ public: // открытая область
 		setSize(size);
 	}
 
+	Vector(const Vector& src);
+
 	~Vector() {
 		setSize(0);
 	}
@@ -72,6 +74,13 @@ private:
 
 };
 
+Vector::Vector(const Vector& src) : size(0), data(nullptr) {
+	setSize(src.size);
+	for (int i = 0; i < size; ++i) {
+		data[i] = src.data[i];
+	}
+}
+
 void Vector::setSize(int size) {
 	if (size < 0) {
 		throw new std::exception("Incorrect size");
@@ -97,6 +106,12 @@ void Vector::print() {
 	}
 }
 
+void printVector(Vector v) { // локальная переменная v - копией передаваемого объекта
+	if (v.getSize() > 5) {
+		v.print();
+	}
+} // уничтожение локальной переменной v: v.~Vector() 
+
 int main() {
 	// один класс и две переменных с типом ClassName
 	ClassName obj1; 
@@ -121,7 +136,7 @@ int main() {
 	// v2.setSize(-10); // == v2.setSize(10) -- исключение
 	v2.setSize(0); // очистка выделенной динамической памяти
 
-	v2 = v2;
+	v2 = v2; // присвоение самому себе должно работать корректно
 
 	Vector* pv = new Vector(); 
 	// 1. Выделение памяти в куче в размере sizeof(Vector) байт 
@@ -143,6 +158,13 @@ int main() {
 	delete pv; 
 	// 1. Вызывается деструктор pv->~Vector()
 	// 2. Освобождается память по указателю pv
+
+	printVector(v2); // (v.size = v2.size, v.data = v2.data) => KK: v=Vector(v2)
+	// после вызова функции могут возникнуть проблемы с v2
+
+	Vector v4 = v2; // КК: v4.Vector(v2)
+	v4 = v2;        // = : v4.operator=(v2)
+
 
 	return 0;
 }
